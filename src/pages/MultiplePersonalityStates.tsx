@@ -37,7 +37,7 @@ const MultiplePersonalityStates = () => {
                                         Theoretical Research Paper
                                     </span>
                                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display mb-8 leading-tight">
-                                        Multiple <span className="gradient-text">Active Personality</span> or Adaptive Self-States
+                                        Multiple <span className="gradient-text">Active Personality</span> or, Adaptive Self-States
                                     </h1>
 
                                     <div className="flex flex-wrap gap-6 items-center text-muted-foreground border-b border-border/30 pb-8">
