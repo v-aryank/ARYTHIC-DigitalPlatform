@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import PageTransition from "@/components/PageTransition";
-import { BookOpen, FileText, Newspaper, ScrollText, Search, Filter, Download } from "lucide-react";
+import { BookOpen, FileText, Newspaper, ScrollText, Search, Filter, Download, Notebook, Clock } from "lucide-react";
 
 // Extended data for the full page
 const categories = [
@@ -11,18 +12,21 @@ const categories = [
     { icon: BookOpen, name: "Journals", count: 8, description: "Peer-reviewed academic publications" },
     { icon: Newspaper, name: "Magazines", count: 12, description: "Industry insights and features" },
     { icon: ScrollText, name: "Research Notes", count: 36, description: "Quick findings and technical briefs" },
+    { icon: Notebook, name: "Research Papers", count: 1, description: "Research Papers" },
 ];
 
 const publications = [
     {
-        category: "Article",
-        title: "The Future of Digital Transformation in Emerging Markets",
-        excerpt: "An in-depth analysis of how developing economies are leveraging technology to leapfrog traditional infrastructure challenges.",
-        author: "Dr. Sarah Chen",
-        date: "Jan 15, 2025",
-        readTime: "8 min read",
-        tags: ["Digital Transformation", "Economics", "Tech"],
-        downloadUrl: "#"
+        category: "Research Papers",
+        subcategory: "Theoretical Research Paper",
+        title: "Multiple Active Personality or Adaptive Self-States",
+        excerpt: "A Conceptual Framework for Human Cognitive Self-Modularity.",
+        author: "V. Aryan Kabir",
+        date: "February 12, 2026",
+        readTime: "10 min read",
+        tags: ["Psychology", "Philosophy", "Cognitive Science"],
+        path: "/research/multiple-personality-states",
+        downloadUrl: "/papers/Multiple%20Active%20Personality.pdf"
     },
     {
         category: "Research Note",
@@ -85,23 +89,24 @@ const ResearchLabPage = () => {
     }, []);
 
     const filteredPublications = publications.filter(pub => {
-        const matchesCategory = activeCategory === "All" || pub.category.includes(activeCategory); // loosely match for plurals/singulars if needed, or exact
-        // Fixing plural/singular mismatch for demo:
         const normalizedCategory = activeCategory === "Articles" ? "Article" :
             activeCategory === "Journals" ? "Journal" :
                 activeCategory === "Magazines" ? "Magazine" :
                     activeCategory === "Research Notes" ? "Research Note" : activeCategory;
 
-        const matchesCategoryFixed = activeCategory === "All" || pub.category === normalizedCategory;
+        const matchesCategory = activeCategory === "All" || pub.category === normalizedCategory;
+
         const matchesSearch = pub.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            pub.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategoryFixed && matchesSearch;
+            pub.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (pub.tags && pub.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
+
+        return matchesCategory && matchesSearch;
     });
 
     return (
         <PageTransition>
             <SmoothScroll>
-                <div className="min-h-screen bg-background">
+                <div className="min-h-screen bg-background text-foreground">
                     <Navbar />
 
                     {/* Header Section */}
@@ -122,7 +127,6 @@ const ResearchLabPage = () => {
                         </div>
                     </section>
 
-                    {/* Rest of the sections... I'll include them to be sure about the structure */}
                     {/* Search and Filter */}
                     <section className="pb-12">
                         <div className="container mx-auto px-6">
@@ -159,7 +163,7 @@ const ResearchLabPage = () => {
                                 </div>
                             </div>
 
-                            {/* Stats/Categories Grid */}
+                            {/* Stats Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-20">
                                 {categories.map((category) => (
                                     <div
@@ -185,38 +189,60 @@ const ResearchLabPage = () => {
 
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredPublications.map((pub, index) => (
-                                    <div key={index} className="flex flex-col h-full service-card group">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <span className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20">
-                                                {pub.category}
-                                            </span>
-                                            <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                                <Clock size={12} /> {pub.readTime}
-                                            </span>
-                                        </div>
-
-                                        <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
-                                            {pub.title}
-                                        </h3>
-
-                                        <p className="text-muted-foreground text-sm mb-6 flex-grow">
-                                            {pub.excerpt}
-                                        </p>
-
-                                        <div className="flex items-center gap-2 mb-6">
-                                            {pub.tags.map(tag => (
-                                                <span key={tag} className="text-xs text-muted-foreground/60 bg-secondary/50 px-2 py-1 rounded">#{tag}</span>
-                                            ))}
-                                        </div>
-
-                                        <div className="flex items-center justify-between pt-4 border-t border-border/30 mt-auto">
-                                            <div className="flex flex-col">
-                                                <span className="text-xs font-semibold text-foreground">{pub.author}</span>
-                                                <span className="text-xs text-muted-foreground">{pub.date}</span>
+                                    <div key={index} className="relative h-full service-card group">
+                                        {pub.path && (
+                                            <Link
+                                                to={pub.path}
+                                                className="absolute inset-0 z-10"
+                                                aria-label={`Read ${pub.title}`}
+                                            />
+                                        )}
+                                        <div className="flex flex-col h-full relative z-0">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <span className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20">
+                                                    {pub.category}
+                                                </span>
+                                                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                                    <Clock size={12} /> {pub.readTime}
+                                                </span>
                                             </div>
-                                            <button className="p-2 rounded-full hover:bg-primary/10 text-primary transition-colors">
-                                                <Download size={18} />
-                                            </button>
+
+                                            <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
+                                                {pub.title}
+                                            </h3>
+
+                                            <p className="text-muted-foreground text-sm mb-6 flex-grow">
+                                                {pub.excerpt}
+                                            </p>
+
+                                            <div className="flex items-center gap-2 mb-6">
+                                                {pub.tags.map(tag => (
+                                                    <span key={tag} className="text-xs text-muted-foreground/60 bg-secondary/50 px-2 py-1 rounded">#{tag}</span>
+                                                ))}
+                                            </div>
+
+                                            <div className="flex items-center justify-between pt-4 border-t border-border/30 mt-auto">
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs font-semibold text-foreground">{pub.author}</span>
+                                                    <span className="text-xs text-muted-foreground">{pub.date}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 relative z-20">
+                                                    {pub.path && (
+                                                        <span className="text-xs font-semibold text-primary px-3 py-1 rounded-full bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                                                            Read Paper
+                                                        </span>
+                                                    )}
+                                                    <a
+                                                        href={pub.downloadUrl}
+                                                        download
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="p-2 rounded-full hover:bg-primary text-primary hover:text-primary-foreground transition-all bg-primary/5 touch-auto"
+                                                        title="Download PDF"
+                                                    >
+                                                        <Download size={18} />
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -237,18 +263,13 @@ const ResearchLabPage = () => {
                                     </button>
                                 </div>
                             )}
-
                         </div>
                     </section>
-
                     <Footer />
                 </div>
             </SmoothScroll>
         </PageTransition>
     );
 };
-
-// Icon component needed for the grid above (was missing in imports)
-import { Clock } from "lucide-react";
 
 export default ResearchLabPage;
