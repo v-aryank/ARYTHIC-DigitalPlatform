@@ -97,14 +97,34 @@ const portfolioSegments = [
         tech: ["Python", "Vue.js", "GraphQL"],
       }*/
     ]
+  },
+  {
+    title: "Robotics & Automation",
+    id: "robotics-automation",
+    description: "Advanced solutions for robotic systems and automated processes.",
+    icon: <Search className="w-8 h-8 text-primary" />,
+    projects: [
+      {
+        name: "Bluprints",
+        description: "A comprehensive platform for designing, simulating, and managing robotic systems and automation workflows.",
+        link: "#",
+        tech: ["React", "Elasticsearch"],
+      },
+      /*{
+        name: "Bio-Discovery Lab",
+        description: "Data-heavy portal for biological research analysis, genome sequencing, and visual modeling.",
+        link: "#",
+        tech: ["Python", "Vue.js", "GraphQL"],
+      }*/
+    ]
   }
 ];
 
 const teamMembers = [
   {
-    name: "CEO & Founder",
-    role: "Strategic Vision & Leadership",
-    description: "Driving innovation and setting the direction for Arythic's growth and impact.",
+    name: "V. Aryan Kabir",
+    role: "CEO & Founder",
+    description: "Strategic Vision & Leadership.",
   },
   {
     name: "Technical Lead",
