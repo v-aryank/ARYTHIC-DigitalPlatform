@@ -122,7 +122,7 @@ const portfolioSegments = [
 
 const teamMembers = [
   {
-    name: "V. Aryan Kabir",
+    name: "V. A..",
     role: "CEO & Founder",
     description: "Strategic Vision & Leadership.",
   },
